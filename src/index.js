@@ -3,58 +3,43 @@ import "./reboot.scss";
 
 // Data layer
 // TODO Move to separated file
-const dataController = (function() {
-    // Define Post constructor
-    const Post = function(
-        attribution,
-        caption,
-        comments,
-        created,
-        filter,
-        id,
-        images,
-        likes,
-        link,
-        location,
-        tags,
-        type,
-        user,
-        userLiked,
-        usersPhoto
-    ) {
-        this.attribution = attribution;
-        this.caption = caption;
-        this.comments = comments;
-        this.created = created;
-        this.filter = filter;
-        this.id = id;
-        this.images = images;
-        this.likes = likes;
-        this.link = link;
-        this.location = location;
-        this.tags = tags;
-        this.type = type;
-        this.user = user;
-        this.userLiked = userLiked;
-        this.userPhoto = usersPhoto;
-    };
-
-    // Add method for handling user likes to post type
-    Post.prototype.toggleLike = function() {
-        console.log("Toogle Like");
-        if (this.userLiked) {
-            this.likes.count--;
-            this.userLiked = false;
-        } else {
-            this.likes.count++;
-            this.userLiked = true;
+const dataController = (() => {
+    // Define Post class
+    class Post {
+        constructor(
+            attribution, caption, comments, created, filter, id, images,
+            likes, link, location, tags, type, user, userLiked, usersPhoto) {
+            this.attribution = attribution;
+            this.caption = caption;
+            this.comments = comments;
+            this.created = created;
+            this.filter = filter;
+            this.id = id;
+            this.images = images;
+            this.likes = likes;
+            this.link = link;
+            this.location = location;
+            this.tags = tags;
+            this.type = type;
+            this.user = user;
+            this.userLiked = userLiked;
+            this.userPhoto = usersPhoto;
         }
-    };
 
-    // Add method for converting timestamp to human data
-    Post.prototype.formatData = function() {
-        // TODO Need to write logic :)
-    };
+        toggleLike() {
+            console.log("Toogle Like");
+            if (this.userLiked) {
+                this.likes.count--;
+                this.userLiked = false;
+            } else {
+                this.likes.count++;
+                this.userLiked = true;
+            }
+        }
+        formatData() {
+
+        }
+    }
 
     // Define and initialize posts array
     const feed = [];
@@ -87,7 +72,7 @@ const dataController = (function() {
                     reject();
                 } else {
                     // Build posts from response data and populate feed array
-                    response.data.forEach(function(post) {
+                    response.data.forEach((post) => {
                         feed.push(
                             new Post(
                                 post.attribution,
@@ -121,7 +106,7 @@ const dataController = (function() {
 
 // UI layer
 // TODO Move to separated file
-const uiController = (function() {
+const uiController = (() => {
     // Defines nodes constants
     const domNodes = {
         feed: ".feed",
@@ -129,7 +114,7 @@ const uiController = (function() {
     };
 
     // Define function for prepare post data to display, check null/undefined etc
-    const preparePostData = function(post) {
+    const preparePostData = (post) => {
         // Need to check other fields
         if (!post.location) {
             post.location = {
@@ -145,10 +130,10 @@ const uiController = (function() {
 
     return {
         // Module API for render feed in browser
-        renderFeed: function(posts) {
+        renderFeed: (posts) => {
             let postTemplate;
             // Populate post template for each feed item
-            posts.forEach(function(post) {
+            posts.forEach((post) => {
                 // Prepare post fields to display
                 preparePostData(post);
                 postTemplate =
@@ -200,7 +185,7 @@ const uiController = (function() {
 })();
 
 // Main app controller
-const app = (function(data, ui) {
+const app = ((data, ui) => {
     // addLike = function(post) {
     //     data.addLike(post);
     //     ui.updatePost(post);
